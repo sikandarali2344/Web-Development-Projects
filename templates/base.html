@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ur-PK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Sikandar Furniture — High-End Living, Delivered{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+  <a class="logo" href="{{ url_for('index') }}">SIKANDAR <span>FURNITURE</span></a>
+  <nav>
+    <ul>
+      <li><a href="{{ url_for('index') }}#new">New Arrivals</a></li>
+      <li><a href="{{ url_for('index') }}#shop">Shop</a></li>
+      <li><a href="{{ url_for('index') }}#why">Why Us</a></li>
+      <li><a href="{{ url_for('index') }}#footer">Contact</a></li>
+    </ul>
+  </nav>
+  <div class="nav-right">
+    {% if user %}
+      <a href="{{ url_for('account') }}" class="account-link">Hi, {{ user['name'].split(' ')[0] }}</a>
+      <a href="{{ url_for('logout') }}" class="account-link logout-link">Logout</a>
+    {% else %}
+      <a href="{{ url_for('login') }}" class="account-link">Login</a>
+      <a href="{{ url_for('register') }}" class="btn btn-primary btn-small">Sign Up</a>
+    {% endif %}
+    <button class="cart-btn" id="cartBtn" aria-label="Cart">
+      🛒<span class="cart-count" id="cartCount">{{ cart_count }}</span>
+    </button>
+  </div>
+</header>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-wrap">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+<footer id="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">SIKANDAR <span>FURNITURE</span></div>
+      <p>High-end furniture, designed for real homes. Handmade by local craftsmen, finished to a standard we'd put in our own house.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="{{ url_for('index') }}#shop">Sofas</a></li>
+        <li><a href="{{ url_for('index') }}#shop">Chairs</a></li>
+        <li><a href="{{ url_for('index') }}#shop">Tables</a></li>
+        <li><a href="{{ url_for('index') }}#shop">Beds</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Account</h4>
+      <ul>
+        {% if user %}
+          <li><a href="{{ url_for('account') }}">My Orders</a></li>
+          <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+          <li><a href="{{ url_for('register') }}">Create Account</a></li>
+        {% endif %}
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="#">Karachi, Pakistan</a></li>
+        <li><a href="#">+92 300 1234567</a></li>
+        <li><a href="#">hello@sikandarfurniture.pk</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div>© 2026 Sikandar Furniture. All rights reserved.</div>
+    <div>Designed &amp; built by <span class="credit">Sikandar Ali</span></div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="drawer-close" id="drawerClose">&times;</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-footer">
+    <div class="drawer-total"><span>Subtotal</span><strong id="drawerTotal">Rs 0</strong></div>
+    <button class="btn btn-primary checkout-btn" id="checkoutBtn">Checkout</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Added to cart</div>
+
+<script>
+  window.IS_LOGGED_IN = {{ 'true' if user else 'false' }};
+  window.LOGIN_URL = "{{ url_for('login') }}";
+</script>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
