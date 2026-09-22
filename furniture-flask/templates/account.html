@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}My Account — Sikandar Furniture{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="section-head">
+    <div>
+      <h2>My Orders</h2>
+      <p>Signed in as {{ user['name'] }} ({{ user['email'] }})</p>
+    </div>
+  </div>
+
+  {% if orders %}
+    <div class="orders-list">
+      {% for order in orders %}
+      <div class="order-card">
+        <div class="order-head">
+          <div>
+            <div class="order-id">Order #{{ order.id }}</div>
+            <div class="order-date">{{ order.created_at.split('T')[0] }}</div>
+          </div>
+          <div class="order-total">Rs {{ '{:,}'.format(order.total) }}</div>
+        </div>
+        <div class="order-items">
+          {% for item in order.lines %}
+          <div class="order-item-row">
+            <span class="swatch small" style="background:{{ item.color }}"></span>
+            <span class="oi-name">{{ item.name }}</span>
+            <span class="oi-qty">× {{ item.qty }}</span>
+            <span class="oi-total">Rs {{ '{:,}'.format(item.line_total) }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="drawer-empty" style="margin-top:20px;">You haven't placed any orders yet. <a href="{{ url_for('index') }}#shop" style="color:var(--oak-light);">Start shopping →</a></div>
+  {% endif %}
+</section>
+{% endblock %}
